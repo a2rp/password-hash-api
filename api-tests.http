@@ -1,0 +1,48 @@
+@baseUrl = http://localhost:1198
+@json = application/json
+
+### 1. Health check
+GET {{baseUrl}}/health
+
+
+### 2. Hash password (default rounds)
+POST {{baseUrl}}/hash
+Content-Type: {{json}}
+
+{
+  "password": "Hello@123"
+}
+
+
+### 3. Hash password (custom rounds)
+POST {{baseUrl}}/hash
+Content-Type: {{json}}
+
+{
+  "password": "Hello@123",
+  "rounds": 10
+}
+
+
+### 4. Verify correct password
+POST {{baseUrl}}/verify
+Content-Type: {{json}}
+
+{
+  "password": "Hello@123",
+  "hash": "$2b$12$fPV1jRg.yAlXEmidEkCBbOV5Ye7ET8SuWxPaEoQeCoBsPAhv4wjFe"
+}
+
+
+### 5. Verify wrong password
+POST {{baseUrl}}/verify
+Content-Type: {{json}}
+
+{
+  "password": "Wrong@123",
+  "hash": "$2b$12$fPV1jRg.yAlXEmidEkCBbOV5Ye7ET8SuWxPaEoQeCoBsPAhv4wjFe"
+}
+
+
+### Analyze bcrypt hash (URL-encoded)
+GET {{baseUrl}}/analyze/$2b$12$fPV1jRg.yAlXEmidEkCBbOV5Ye7ET8SuWxPaEoQeCoBsPAhv4wjFe
