@@ -1,132 +1,84 @@
 # Password Hash API
 
-A minimal backend API demonstrating secure password hashing and verification using bcrypt.
-
-This project focuses on one concept only:
-password hashing lifecycle with configurable salt rounds.
-
----
-
-## Tech Stack
-
-- Node.js
-- Express
-- bcrypt
-- zod (validation)
-
----
+A small Node.js and Express API that demonstrates bcrypt password hashing, verification, and hash metadata.
 
 ## Features
 
-- Hash password with configurable salt rounds
-- Verify password against bcrypt hash
-- Analyze bcrypt hash (extract version and cost factor)
-- Input validation using zod
-- Clean layered project structure
-- REST Client test file support
+- Hash passwords with a configurable bcrypt cost factor
+- Verify a password against a bcrypt hash
+- Inspect the bcrypt version and cost factor in a hash
+- Validate request bodies with Zod
+- Report health and reject oversized JSON requests
 
----
+## Requirements
 
-## Installation
+Node.js 20.19+ or 22.12+.
 
-```bash
-git clone <your-repo-url>
+## Setup
+
+~~~bash
+git clone https://github.com/a2rp/password-hash-api.git
 cd password-hash-api
-npm install
-```
+npm ci
+~~~
 
----
+Copy .env.example to .env and adjust the values if needed:
 
-## Create .env file:
-
+~~~env
 PORT=1198
 BCRYPT_SALT_ROUNDS=12
+~~~
 
----
+Start the API:
 
-## Run server:
-
-```bash
+~~~bash
 npm run dev
-```
+~~~
 
----
+## Endpoints
 
-## API Endpoints
-
----
-
-## Health Check
+### Health
 
 GET /health
 
----
-
-## Hash Password
+### Hash a password
 
 POST /hash
 
-## Body:
-
+~~~json
 {
-"password": "Hello@123",
-"rounds": 12
+  "password": "Hello@123",
+  "rounds": 12
 }
+~~~
 
-## Response:
+The rounds field is optional and must be an integer from 4 to 15. If omitted, the API uses BCRYPT_SALT_ROUNDS or 12. Bcrypt accepts passwords up to 72 UTF-8 bytes; longer values are rejected to avoid silently hashing only a prefix.
 
-{
-"hash": "$2b$12$...",
-"roundsUsed": 12
-}
-
----
-
-## Verify Password
+### Verify a password
 
 POST /verify
 
-## Body:
-
+~~~json
 {
-"password": "Hello@123",
-"hash": "$2b$12$..."
+  "password": "Hello@123",
+  "hash": "$2b$12$fPV1jRg.yAlXEmidEkCBbOV5Ye7ET8SuWxPaEoQeCoBsPAhv4wjFe"
 }
+~~~
 
-## Response:
+Returns {"ok": true} when the password matches. Hashes with a cost factor above 15 are rejected so verification work stays within the API's configured limit.
 
-{
-"ok": true
-}
-
----
-
-## Analyze Hash
+### Analyze a bcrypt hash
 
 GET /analyze/:hash
 
-## Response:
+For URL paths, encode the $ characters in the hash:
 
-{
-"version": "2b",
-"rounds": 12
-}
+GET /analyze/%242b%2412%24fPV1jRg.yAlXEmidEkCBbOV5Ye7ET8SuWxPaEoQeCoBsPAhv4wjFe
 
----
+Returns the hash version and cost factor. Invalid bcrypt hashes receive a 400 response.
 
-## What This Project Demonstrates
+## Request limits
 
-- How bcrypt embeds salt inside hash
-- Cost factor awareness
-- Safe salt round boundaries
-- Clean separation of routes, controllers, utils
-- Backend micro-service design pattern
+JSON request bodies are limited to 16 KB. Malformed JSON receives a 400 response and oversized bodies receive a 413 response.
 
----
-
-### Notes
-
-- This is a single-purpose backend micro project.
-- It intentionally avoids authentication systems,
-  databases, or complex architecture to keep focus
-  on password hashing mechanics.
+This project is an educational API, not a user-account or authentication service. A public deployment should add access controls and rate limiting because password hashing uses significant CPU time.

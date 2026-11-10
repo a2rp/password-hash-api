@@ -4,7 +4,7 @@ const { analyzeHash } = require("../controllers/analyze.controller");
 
 const router = express.Router();
 
-// URL encode required because bcrypt hash has "$"
+// Express decodes percent-encoded route parameters before they reach the controller.
 router.get("/analyze/:hash", analyzeHash);
 
 module.exports = router;

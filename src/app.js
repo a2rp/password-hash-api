@@ -8,7 +8,8 @@ const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
-app.use(express.json());
+app.disable("x-powered-by");
+app.use(express.json({ limit: "16kb" }));
 
 app.get("/health", (req, res) => {
     return res.status(200).json({

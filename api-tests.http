@@ -45,4 +45,4 @@ Content-Type: {{json}}
 
 
 ### Analyze bcrypt hash (URL-encoded)
-GET {{baseUrl}}/analyze/$2b$12$fPV1jRg.yAlXEmidEkCBbOV5Ye7ET8SuWxPaEoQeCoBsPAhv4wjFe
+GET {{baseUrl}}/analyze/%242b%2412%24fPV1jRg.yAlXEmidEkCBbOV5Ye7ET8SuWxPaEoQeCoBsPAhv4wjFe

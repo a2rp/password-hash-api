@@ -1,5 +1,9 @@
 // src/utils/bcrypt.js
 const bcrypt = require("bcrypt");
+const {
+    MIN_BCRYPT_ROUNDS,
+    MAX_BCRYPT_ROUNDS,
+} = require("../constants/bcrypt");
 
 // config
 const DEFAULT_ROUNDS = process.env.BCRYPT_SALT_ROUNDS
@@ -10,8 +14,8 @@ const safeRounds = (n) => {
     const v = Number(n);
 
     if (!Number.isFinite(v)) return 12;
-    if (v < 4) return 4;
-    if (v > 15) return 15;
+    if (v < MIN_BCRYPT_ROUNDS) return MIN_BCRYPT_ROUNDS;
+    if (v > MAX_BCRYPT_ROUNDS) return MAX_BCRYPT_ROUNDS;
 
     return Math.floor(v);
 };

@@ -1,0 +1,13 @@
+const MIN_BCRYPT_ROUNDS = 4;
+const MAX_BCRYPT_ROUNDS = 15;
+const MAX_BCRYPT_PASSWORD_BYTES = 72;
+const BCRYPT_HASH_PATTERN = /^\$(2[aby])\$(0[4-9]|[12]\d|3[01])\$[./A-Za-z0-9]{53}$/;
+const BCRYPT_VERIFY_HASH_PATTERN = /^\$(2[aby])\$(0[4-9]|1[0-5])\$[./A-Za-z0-9]{53}$/;
+
+module.exports = {
+    BCRYPT_HASH_PATTERN,
+    BCRYPT_VERIFY_HASH_PATTERN,
+    MAX_BCRYPT_PASSWORD_BYTES,
+    MAX_BCRYPT_ROUNDS,
+    MIN_BCRYPT_ROUNDS,
+};
